@@ -5,8 +5,21 @@ on:
   push:
     branches: [ main, master, develop ]
   
-  # Manual trigger for on-demand scans
+  # Manual trigger for on-demand scans or fixes
   workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Mode: scan or fix'
+        required: false
+        default: 'scan'
+        type: choice
+        options:
+          - scan
+          - fix
+      issue_number:
+        description: 'Issue number (required for fix mode)'
+        required: false
+        type: string
   
   # Weekly scheduled scan (every Monday at 2 AM)
   schedule:
@@ -24,7 +37,9 @@ permissions:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
-    if: github.event_name \!= 'issues'
+    if: |
+      (github.event_name \!= 'issues' && github.event_name \!= 'workflow_dispatch') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'scan')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -32,31 +47,28 @@ jobs:
       - name: Run RSOLV Security Scan
         uses: RSOLV-dev/rsolv-action@v1
         with:
-          # Your RSOLV API key (stored as a secret)
           api_key: ${{ secrets.RSOLV_API_KEY }}
-          
-          # Set scan_mode to 'scan' for vulnerability detection
           scan_mode: 'scan'
-          
-          # Label to add to created issues
           issue_label: 'security'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  # Automatic fix generation when issues are labeled
+  # Fix generation - triggered by label or manual dispatch
   fix-vulnerabilities:
     runs-on: ubuntu-latest
     if: |
-      github.event_name == 'issues' && 
-      github.event.action == 'labeled' &&
-      contains(github.event.label.name, 'rsolv:automate')
+      (github.event_name == 'issues' && 
+       github.event.action == 'labeled' &&
+       contains(github.event.label.name, 'rsolv:automate')) ||
+      (github.event_name == 'workflow_dispatch' && 
+       github.event.inputs.mode == 'fix')
     steps:
       - name: Generate Security Fix
         uses: RSOLV-dev/rsolv-action@v1
         with:
           api_key: ${{ secrets.RSOLV_API_KEY }}
           scan_mode: 'fix'
-          issue_number: ${{ github.event.issue.number }}
+          issue_number: ${{ github.event.issue.number || github.event.inputs.issue_number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 EOF < /dev/null
