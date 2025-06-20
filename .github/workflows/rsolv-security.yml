@@ -33,9 +33,6 @@ jobs:
           # Scan mode - automatically finds and reports vulnerabilities
           mode: 'scan'
           
-          # Automatically create issues for found vulnerabilities
-          create_issues: true
-          
           # Label to add to created issues
           issue_label: 'security'
         env:
