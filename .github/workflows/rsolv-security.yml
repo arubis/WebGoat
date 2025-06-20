@@ -11,6 +11,10 @@ on:
   # Weekly scheduled scan (every Monday at 2 AM)
   schedule:
     - cron: '0 2 * * 1'
+  
+  # Trigger on issue events for automated fixes
+  issues:
+    types: [labeled]
 
 permissions:
   contents: read
@@ -20,6 +24,7 @@ permissions:
 jobs:
   security-scan:
     runs-on: ubuntu-latest
+    if: github.event_name \!= 'issues'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -54,3 +59,4 @@ jobs:
           issue_number: ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+EOF < /dev/null
