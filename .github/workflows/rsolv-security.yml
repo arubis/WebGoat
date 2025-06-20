@@ -30,8 +30,8 @@ jobs:
           # Your RSOLV API key (stored as a secret)
           api_key: ${{ secrets.RSOLV_API_KEY }}
           
-          # Scan mode - automatically finds and reports vulnerabilities
-          mode: 'scan'
+          # Set scan_mode to 'scan' for vulnerability detection
+          scan_mode: 'scan'
           
           # Label to add to created issues
           issue_label: 'security'
