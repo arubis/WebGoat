@@ -1,0 +1,59 @@
+name: RSOLV Security Scanner
+
+on:
+  # Automatic scanning on every push
+  push:
+    branches: [ main, master, develop ]
+  
+  # Manual trigger for on-demand scans
+  workflow_dispatch:
+  
+  # Weekly scheduled scan (every Monday at 2 AM)
+  schedule:
+    - cron: '0 2 * * 1'
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run RSOLV Security Scan
+        uses: RSOLV-dev/rsolv-action@v1
+        with:
+          # Your RSOLV API key (stored as a secret)
+          api_key: ${{ secrets.RSOLV_API_KEY }}
+          
+          # Scan mode - automatically finds and reports vulnerabilities
+          mode: 'scan'
+          
+          # Automatically create issues for found vulnerabilities
+          create_issues: true
+          
+          # Label to add to created issues
+          issue_label: 'security'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Automatic fix generation when issues are labeled
+  fix-vulnerabilities:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'issues' && 
+      github.event.action == 'labeled' &&
+      contains(github.event.label.name, 'rsolv:automate')
+    steps:
+      - name: Generate Security Fix
+        uses: RSOLV-dev/rsolv-action@v1
+        with:
+          api_key: ${{ secrets.RSOLV_API_KEY }}
+          mode: 'fix'
+          issue_number: ${{ github.event.issue.number }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
