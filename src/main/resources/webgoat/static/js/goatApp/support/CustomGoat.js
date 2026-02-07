@@ -12,11 +12,23 @@ define(['jquery',
                 getFlights:function() {
                     var fromField = $('#travelFrom');
                     var toField = $('#travelTo');
+                    // Sanitize input to prevent XML injection
+                    var sanitizedFrom = this.escapeXml(fromField.value());
                     var xml = '<?xml version="1.0"?>' +
                         '<searchForm>' +
-                        '  <from>' + fromField.value() + '</from>' +
+                        '  <from>' + sanitizedFrom + '</from>' +
                         '</searchForm>';
                     return xml;
+                },
+
+                escapeXml:function(unsafe) {
+                    if (!unsafe) return '';
+                    return unsafe.toString()
+                        .replace(/&/g, '&amp;')
+                        .replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;')
+                        .replace(/"/g, '&quot;')
+                        .replace(/'/g, '&apos;');
                 },
             }
 

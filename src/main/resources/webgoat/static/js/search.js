@@ -39,7 +39,9 @@ function search(arg) {
         } else {
             document.querySelectorAll('[category="Challenges"]')[0].click();
         }
-        document.querySelectorAll('[category="'+categoryId+'"]')[0].click();
+        // Use CSS.escape to prevent selector injection
+        var sanitizedCategoryId = CSS.escape(categoryId);
+        document.querySelectorAll('[category="'+sanitizedCategoryId+'"]')[0].click();
       }
 
 };
