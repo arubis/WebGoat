@@ -3,7 +3,8 @@
 
     var tpl = {
         "font-styles": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li class='dropdown'>" +
                 "<a class='btn dropdown-toggle btn-" + size + " btn-default' data-toggle='dropdown' href='#'>" +
                 "<i class='glyphicon glyphicon-font'></i>&nbsp;<span class='current-font'>" + locale.font_styles.normal + "</span>&nbsp;<b class='caret'></b>" +
@@ -21,7 +22,8 @@
         },
 
         "emphasis": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li>" +
                 "<div class='btn-group'>" +
                 "<a class='btn btn-" + size + " btn-default' data-wysihtml5-command='bold' title='CTRL+B' tabindex='-1'>" + locale.emphasis.bold + "</a>" +
@@ -32,7 +34,8 @@
         },
 
         "lists": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li>" +
                 "<div class='btn-group'>" +
                 "<a class='btn btn-" + size + " btn-default' data-wysihtml5-command='insertUnorderedList' title='" + locale.lists.unordered + "' tabindex='-1'><i class='glyphicon glyphicon-list'></i></a>" +
@@ -44,7 +47,8 @@
         },
 
         "link": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li>" +
                 ""+
                 "<div class='bootstrap-wysihtml5-insert-link-modal modal fade'>" +
@@ -70,7 +74,8 @@
         },
 
         "image": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li>" +
                 "<div class='bootstrap-wysihtml5-insert-image-modal modal fade'>" +
                 "<div class='modal-dialog'>"+
@@ -94,7 +99,8 @@
         },
 
         "html": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li>" +
                 "<div class='btn-group'>" +
                 "<a class='btn btn-" + size + " btn-default' data-wysihtml5-action='change_view' title='" + locale.html.edit + "' tabindex='-1'><i class='glyphicon glyphicon-pencil'></i></a>" +
@@ -103,7 +109,8 @@
         },
 
         "color": function(locale, options) {
-            var size = (options && options.size) ? ' btn-'+options.size : '';
+            // Sanitize size parameter to prevent HTML injection - only allow alphanumeric and hyphen
+            var size = (options && options.size) ? ' btn-'+String(options.size).replace(/[^a-zA-Z0-9-]/g, '') : '';
             return "<li class='dropdown'>" +
                 "<a class='btn dropdown-toggle btn-" + size + " btn-default' data-toggle='dropdown' href='#' tabindex='-1'>" +
                 "<span class='current-color'>" + locale.colours.black + "</span>&nbsp;<b class='caret'></b>" +
